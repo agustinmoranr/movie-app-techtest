@@ -16,7 +16,7 @@
       },
     }),
     axios.get(`${config.public.apiBase}/movie/now_playing`, {
-      query: {
+      params: {
         language: 'es-MX',
         page: moviesNowPlayingPage,
       },
@@ -28,7 +28,7 @@
   ])
 
   const { data: moviesByYear } = await axios.get(`${config.public.apiBase}/discover/movie`, {
-    query: {
+    params: {
       include_adult: false,
       include_video: false,
       language: 'es-MX',
