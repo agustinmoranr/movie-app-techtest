@@ -48,7 +48,7 @@
       return movies.value = moviesByYear
     }
 
-    movies.value = moviesNowPlaying ?? []
+    movies.value = moviesNowPlaying ?? {results: []}
   }, {immediate: true})
   
   function handleSelectYear() {
