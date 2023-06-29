@@ -87,7 +87,7 @@
       <main>
         <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           <MovieCard 
-            v-for="movie in movies.value.results" 
+            v-for="movie in movies.value?.results" 
             :key="movie.id" 
             :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
             :title="movie.title"
