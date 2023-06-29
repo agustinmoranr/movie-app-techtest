@@ -1,5 +1,4 @@
 <script setup>
-  import axios from 'axios';
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
   const config = useRuntimeConfig();
@@ -7,16 +6,11 @@
   const mode = ref("list")
   const moviesByYearPage = ref(1)
   const moviesNowPlayingPage = ref(1)
-  let movies = {results: []}
+  const movies = ref({results: []})
   const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
-    axios.get(`${config.public.apiBase}/configuration`, {
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${config.public.accessToken}`
-      },
-    }),
-    axios.get(`${config.public.apiBase}/movie/now_playing`, {
-      params: {
+    useFetch('/api/movieDBConfig'),
+    useFetch(`${config.public.apiBase}/movie/now_playing`, {
+      query: {
         language: 'es-MX',
         page: moviesNowPlayingPage,
       },
@@ -24,11 +18,12 @@
         accept: 'application/json',
         Authorization: `Bearer ${config.public.accessToken}`
       },
+      watch: [moviesNowPlayingPage],
     })
   ])
 
-  const { data: moviesByYear } = await axios.get(`${config.public.apiBase}/discover/movie`, {
-    params: {
+  const {data: moviesByYear, pending, error} = await useFetch(`${config.public.apiBase}/discover/movie`, {
+    query: {
       include_adult: false,
       include_video: false,
       language: 'es-MX',
@@ -36,26 +31,30 @@
       primary_release_year: release_year,
       sort_by: 'popularity.desc',
     },
+    onRequest({ request, options}) {
+      if(!release_year.value) {
+        return request.signal.abort()
+      }
+    },
     headers: {
       accept: 'application/json',
       Authorization: `Bearer ${config.public.accessToken}`
     },
+    watch: [release_year, moviesByYearPage],
   })
 
-  watch([mode, release_year], () => {
+  watch([mode, release_year, moviesByYear], () => {
     if(mode.value === "release_year" && moviesByYear.value) {
-      return movies = moviesByYear
+      return movies.value = moviesByYear
     }
 
-    movies = moviesNowPlaying ?? {results: []}
+    movies.value = moviesNowPlaying ?? {results: []}
   }, {immediate: true})
   
   function handleSelectYear() {
     mode.value = "release_year"
   }
   const maxYear = `${new Date().getFullYear() + 1}`  
-
-  console.log({movieDBConfig,moviesByYear, moviesNowPlaying, movies})
 </script>
 
 <template>
@@ -88,7 +87,7 @@
       <main>
         <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           <MovieCard 
-            v-for="movie in movies.results" 
+            v-for="movie in movies.value?.results" 
             :key="movie.id" 
             :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
             :title="movie.title"
