@@ -8,7 +8,14 @@
   const moviesNowPlayingPage = ref(1)
   const movies = ref({results: []})
   const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
-    useFetch('/api/movieDBConfig'),
+    useFetch(`/configuration`, {
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${config.public.accessToken}`
+      },
+      server: false,
+      baseURL: config.public.apiBase,
+    }),
     useFetch(`${config.public.apiBase}/movie/now_playing`, {
       query: {
         language: 'es-MX',
@@ -19,6 +26,7 @@
         Authorization: `Bearer ${config.public.accessToken}`
       },
       watch: [moviesNowPlayingPage],
+      server: false,
     })
   ])
 
@@ -41,6 +49,7 @@
       Authorization: `Bearer ${config.public.accessToken}`
     },
     watch: [release_year, moviesByYearPage],
+    server: false
   })
 
   watch([mode, release_year, moviesByYear], () => {
