@@ -24,7 +24,6 @@
         accept: 'application/json',
         Authorization: `Bearer ${config.public.accessToken}`
       },
-      watch: [moviesNowPlayingPage],
     })
   ])
 
@@ -46,7 +45,6 @@
       accept: 'application/json',
       Authorization: `Bearer ${config.public.accessToken}`
     },
-    watch: [release_year, moviesByYearPage],
   })
 
   watch([mode, release_year], () => {
