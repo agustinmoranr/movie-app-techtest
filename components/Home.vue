@@ -36,11 +36,6 @@
       primary_release_year: release_year,
       sort_by: 'popularity.desc',
     },
-    onRequest({ request, options}) {
-      if(!release_year.value) {
-        return request.signal.abort()
-      }
-    },
     headers: {
       accept: 'application/json',
       Authorization: `Bearer ${config.public.accessToken}`
