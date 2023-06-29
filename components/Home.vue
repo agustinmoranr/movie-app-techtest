@@ -6,7 +6,7 @@
   const mode = ref("list")
   const moviesByYearPage = ref(1)
   const moviesNowPlayingPage = ref(1)
-  const movies = ref([])
+  const movies = ref({results: []})
   const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
     useFetch('/api/movieDBConfig'),
     useFetch(`${config.public.apiBase}/movie/now_playing`, {
