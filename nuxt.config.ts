@@ -16,6 +16,11 @@ export default defineNuxtConfig({
     // Keys within public, will be also exposed to the client-side
     public: {
       apiBase: process.env.NUXT_ENDPOINT_MOVIEDB || "",
+      apiKey: process.env.NUXT_API_KEY_MOVIEDB || "",
+      accessToken: process.env.NUXT_ACCESS_TOKEN_MOVIEDB || "",
     }
-  }
+  },
+  build: {
+    transpile: ['@vuepic/vue-datepicker']
+  },
 })

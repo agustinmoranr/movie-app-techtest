@@ -1,25 +1,93 @@
-
-
 <script setup>
-  const [{data: config}, {data: movies}] = await Promise.all([
+  import VueDatePicker from '@vuepic/vue-datepicker';
+  import '@vuepic/vue-datepicker/dist/main.css'
+  const config = useRuntimeConfig();
+  const release_year = ref();
+  const mode = ref("list")
+  const moviesByYearPage = ref(1)
+  const moviesNowPlayingPage = ref(1)
+  const movies = ref([])
+  const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
     useFetch('/api/movieDBConfig'),
-    useFetch('/api/movies')
+    useFetch(`${config.public.apiBase}/movie/now_playing`, {
+      query: {
+        language: 'es-MX',
+        page: moviesNowPlayingPage,
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${config.public.accessToken}`
+      },
+      watch: [moviesNowPlayingPage],
+    })
   ])
+
+  const {data: moviesByYear, pending, error} = await useFetch(`${config.public.apiBase}/discover/movie`, {
+    query: {
+      include_adult: false,
+      include_video: false,
+      language: 'es-MX',
+      page: moviesByYearPage,
+      primary_release_year: release_year,
+      sort_by: 'popularity.desc',
+    },
+    onRequest({ request, options}) {
+      if(!release_year.value) {
+        return request.signal.abort()
+      }
+    },
+    headers: {
+      accept: 'application/json',
+      Authorization: `Bearer ${config.public.accessToken}`
+    },
+    watch: [release_year, moviesByYearPage],
+  })
+
+  watch([mode, release_year, moviesByYear], () => {
+    if(mode.value === "release_year" && moviesByYear.value) {
+      return movies.value = moviesByYear
+    }
+
+    movies.value = moviesNowPlaying ?? []
+  }, {immediate: true})
   
-  console.log(config.value)
-  console.log(movies.value)
-  
-  const  {count, increment, decrement} = useCount()
+  function handleSelectYear() {
+    mode.value = "release_year"
+  }
+  const maxYear = `${new Date().getFullYear() + 1}`  
 </script>
 
 <template>
-  <h1 class="text-3xl font-bold underline">Hello vue</h1>
-  <div class="flex gap-2">
-    <button @click="increment" class="p-2 rounded border bg-gray-200" >Increment</button>
-    <button @click="decrement" class="p-2 rounded border bg-gray-200">Decrement</button>
-  </div>
-  {{ count }}
-  <NuxtLink to="/movieDetail/1">Movie 1</NuxtLink>
+  <div class="p-4 max-w-screen-lg mx-auto">
+    <header>
+      <h1 class="text-3xl ">Películas</h1>
+    </header>
+    <div>
+      <span class="text-sm">Año de lanzamiento</span>
+      <div class="w-24">
+        <VueDatePicker
+        v-model="release_year"  
+        @update:model-value="handleSelectYear"
+        :max-date="maxYear"
+        :action-row="{showCancel: false}" 
+        :hide-input-icon="true"
+        input-class-name="!py-0.5"
+        locale="es" 
+        select-text="Aceptar" 
+        year-picker 
+        placeholder="Año"
+        />
+    </div>
+
+    </div>
+    <main>
+      <section v-for="movie in movies.value.results" :key="movie.id">
+        <NuxtLink :to="`movieDetail/${movie.id}`">
+          <div>{{movie.title}}</div>
+        </NuxtLink>
+      </section>
+    </main>
+    </div>
 </template>
 <style>
 </style>
