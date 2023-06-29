@@ -18,6 +18,7 @@ export default defineNuxtConfig({
       apiBase: process.env.NUXT_ENDPOINT_MOVIEDB || "",
       apiKey: process.env.NUXT_API_KEY_MOVIEDB || "",
       accessToken: process.env.NUXT_ACCESS_TOKEN_MOVIEDB || "",
+      apiBaseImages: process.env.NUXT_ENDPOINT_MOVIEDB_IMAGES || ""
     }
   },
   build: {

@@ -58,36 +58,49 @@
 </script>
 
 <template>
-  <div class="p-4 max-w-screen-lg mx-auto">
-    <header>
-      <h1 class="text-3xl ">Películas</h1>
-    </header>
-    <div>
-      <span class="text-sm">Año de lanzamiento</span>
-      <div class="w-24">
-        <VueDatePicker
-        v-model="release_year"  
-        @update:model-value="handleSelectYear"
-        :max-date="maxYear"
-        :action-row="{showCancel: false}" 
-        :hide-input-icon="true"
-        input-class-name="!py-0.5"
-        locale="es" 
-        select-text="Aceptar" 
-        year-picker 
-        placeholder="Año"
-        />
+  <div class="max-w-screen-xl mx-auto p-4">
+    <header><h1 class="text-4xl text-center">Nuevos lanzamientos</h1></header>
+    <div class="">
+      <header class="mb-4">
+        <h2 class="text-3xl ">Cartelera</h2>
+      </header>
+      <div class="mb-4">
+        <span>Filtrar por:</span>
+        <div class="flex flex-col gap-1 mt-2">
+          <span class="text-sm">Año de lanzamiento</span>
+          <div class="w-24">
+            <VueDatePicker
+            v-model="release_year"  
+            @update:model-value="handleSelectYear"
+            :max-date="maxYear"
+            :action-row="{showCancel: false}" 
+            :hide-input-icon="true"
+            input-class-name="!py-0.5"
+            locale="es" 
+            select-text="Aceptar" 
+            year-picker 
+            placeholder="Año"
+            />
+          </div>
+        </div>
+      </div>
+      <main>
+        <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
+          <MovieCard 
+            v-for="movie in movies.value.results" 
+            :key="movie.id" 
+            :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
+            :title="movie.title"
+            :overview="movie.overview"
+            :id="movie.id"
+          />
+          
+        </section>
+      </main>
     </div>
+  </div>
 
-    </div>
-    <main>
-      <section v-for="movie in movies.value.results" :key="movie.id">
-        <NuxtLink :to="`movieDetail/${movie.id}`">
-          <div>{{movie.title}}</div>
-        </NuxtLink>
-      </section>
-    </main>
-    </div>
 </template>
 <style>
+ 
 </style>
