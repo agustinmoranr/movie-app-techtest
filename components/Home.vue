@@ -174,22 +174,26 @@
           class="text-xs px-3 font-medium bg-blue-500 text-text-primary rounded-full py-1.5" >{{genre.name}}</span>
           <button @click="onCleanGenresFilter" class="bg-primary-button rounded-full w-[28px] h-[28px]">X</button>
         </div>
-        <div v-if="openGenresSelector">
-          <div class="flex flex-wrap gap-2 w-[30vw] min-w-[300px] min-h-[200px] p-4 bg-text-primary text-background rounded mx-[auto] mt-2" v-if="genres">
-            <div class="flex flex-wrap gap-2">
-              <span v-for="genre in genres" @click="onSelectGenre(genre, $event)" 
-              class="text-xs px-3 font-medium text-text-primary rounded-full py-1.5 cursor-pointer" 
-              :class="{'bg-accent': genreDisabled(genre), 'bg-blue-500': !genreDisabled(genre)}"
-              >
-                {{genre.name}}
-              </span>
+        <div class="relative">
+          <div v-if="openGenresSelector" class="absolute inset-0 z-10 sm:right-auto">
+            <div class="flex flex-wrap gap-2 w-[30vw] min-w-[300px] min-h-[200px] p-4 bg-text-primary text-background rounded mx-[auto] mt-2 " v-if="genres">
+              <h3 class="ml-1 text-xl">Selecciona una categoría</h3>
+              <hr class="w-full border-t-2">
+              <div class="flex flex-wrap gap-2">
+                <span v-for="genre in genres" @click="onSelectGenre(genre, $event)" 
+                class="text-xs px-3 font-medium text-text-primary rounded-full py-1.5 cursor-pointer" 
+                :class="{'bg-accent': genreDisabled(genre), 'bg-blue-500': !genreDisabled(genre)}"
+                >
+                  {{genre.name}}
+                </span>
+              </div>
+              <div class="flex gap-2 ml-[auto] mb-[-0.5rem] mt-2 text-sm">
+                <button @click="closeGenresSelector" class="bg-primary-button py-1 px-2 rounded text-text-primary">CANCELAR</button>
+                <button @click="onAccepGendersSelector"  class="bg-primary-button py-1 px-2 rounded text-text-primary">ACEPTAR</button>
+              </div>
             </div>
-            <div class="flex gap-2 ml-[auto]">
-              <button @click="closeGenresSelector" class="bg-primary-button py-1 px-2 rounded text-text-primary">CANCELAR</button>
-              <button @click="onAccepGendersSelector"  class="bg-primary-button py-1 px-2 rounded text-text-primary">ACEPTAR</button>
-            </div>
+            <div v-else class="animate-pulse w-[30vw] mx-[auto] mt-2 min-w-[300px] min-h-[200px] bg-text-primary rounded"  />
           </div>
-          <div v-else class="animate-pulse w-[30vw] mx-[auto] mt-2 min-w-[300px] min-h-[200px] bg-text-primary rounded"  />
         </div>
       </div>
       <main>
