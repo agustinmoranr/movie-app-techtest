@@ -5,18 +5,60 @@
   const { value: release_year, setValue: setReleaseYearValue, removeValue: removeYear } = useLocalStorage('release_year');
   const { value: genresToQuery, setValue: setGenresToQueryValue, removeValue: removeGenres } = useLocalStorage('genresToQuery', []);
   const config = useRuntimeConfig();
-  // const release_year = ref();
-  // const mode = ref("list")
-  // const genresToQuery = ref([])
-  const moviesByYearPage = ref(1)
-  const moviesNowPlayingPage = ref(1)
-  const movies = ref({results: []})
+  const currentPage = ref(1)
   const genres = ref(null)
   const selectedGenres = ref([])
   const openGenresSelector = ref(false)
   const genresLoading = ref(false)
   const with_genres = computed(() => genresToQuery.value.map(genre => genre.id).join("|"))
-  const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
+
+  const queryMoviesNowPlaying = (page) => {
+    return useFetch(`${config.public.apiBase}/movie/now_playing`, {
+      query: {
+        language: 'es-MX',
+        page,
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${config.public.accessToken}`
+      },
+      server: false,
+    })
+  }
+
+  const queryMoviesByFiltering = async (page) => {
+    return useFetch(`${config.public.apiBase}/discover/movie`, {
+      query: {
+        include_adult: false,
+        include_video: false,
+        language: 'es-MX',
+        page,
+        primary_release_year: release_year,
+        with_genres,
+        sort_by: 'popularity.desc',
+      },
+      onRequest({ request, options}) {
+        if(!release_year.value && !with_genres.value.length) {
+          return request.signal.abort()
+        }
+      },
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${config.public.accessToken}`
+      },
+      server: false
+    })
+  }
+
+  const handleQueryMovies = async (page = 1) => {
+    if(mode.value === "list") {
+      return queryMoviesNowPlaying(page)
+    } else {
+      return queryMoviesByFiltering(page)
+    }
+  }
+
+  const [{data: movieDBConfig}, {data: movies}] = await Promise.all([
     useFetch(`${config.public.apiBase}/configuration`, {
       headers: {
         accept: 'application/json',
@@ -24,42 +66,8 @@
       },
       server: false,
     }),
-    useFetch(`${config.public.apiBase}/movie/now_playing`, {
-      query: {
-        language: 'es-MX',
-        page: moviesNowPlayingPage,
-      },
-      headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${config.public.accessToken}`
-      },
-      watch: [moviesNowPlayingPage],
-      server: false,
-    })
+    handleQueryMovies(currentPage.value)
   ])
-
-  const {data: moviesFiltered, pending, error} = await useFetch(`${config.public.apiBase}/discover/movie`, {
-    query: {
-      include_adult: false,
-      include_video: false,
-      language: 'es-MX',
-      page: moviesByYearPage,
-      primary_release_year: release_year,
-      with_genres,
-      sort_by: 'popularity.desc',
-    },
-    onRequest({ request, options}) {
-      if(!release_year.value && !with_genres.value.length) {
-        return request.signal.abort()
-      }
-    },
-    headers: {
-      accept: 'application/json',
-      Authorization: `Bearer ${config.public.accessToken}`
-    },
-    watch: [release_year, moviesByYearPage, with_genres],
-    server: false
-  })
 
   const handleSelectYear = (value) => {
     setReleaseYearValue(value)
@@ -83,20 +91,18 @@
     genres.value = res.data.value.genres
   }
 
-  watch([mode, release_year, moviesFiltered, genresToQuery], () => {
-    if(mode.value === "filtering" && moviesFiltered.value) {
-      return movies.value = moviesFiltered
-    }
-
-    movies.value = moviesNowPlaying ?? {results: []}
-  }, {immediate: true})
-  
-  watch([release_year, genresToQuery], () => {
-    if(release_year.value || genresToQuery.value.length > 0) {
+  watch([release_year, with_genres], () => {
+    if(release_year.value || Boolean(with_genres.value)) {
       setModeValue("filtering")
     } else {
       setModeValue("list")
     }
+  })
+
+  watch([mode, release_year, with_genres], async () => {
+    currentPage.value = 1
+    const res = await handleQueryMovies(currentPage.value)
+    movies.value = res.data.value
   })
 
   const handleOpenGenresSelector = async () => {
@@ -105,9 +111,6 @@
     await queryGenres()
   }
 
-  // function handleSelectYear() {
-  //   mode.value = "filtering"
-  // }
   const maxYear = `${new Date().getFullYear() + 1}`
 
   const onAccepGendersSelector = () => {
@@ -151,6 +154,19 @@
 
     return selectedGenresIds.sort().join(',') === genresToQueryIds.sort().join(',') || !selectedGenres.value.length
   })
+
+  const onIntersectMovieCard = async (index, element) => {
+    // if it is the last item in list query more results
+    if((index === movies.value?.results?.length - 1) && currentPage.value <= movies.value.total_pages) {
+      console.log("i am last item")
+      currentPage.value++
+      const newMovies = await handleQueryMovies(currentPage.value)
+
+      if(!newMovies.error.value) {
+        movies.value.results = [...movies.value.results, ...newMovies.data.value.results]
+      }
+    }
+  }
 
 </script>
 
@@ -219,13 +235,14 @@
       <main>
         <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           <MovieCard 
-            v-if="movies.value?.results.length"
-            v-for="movie in movies.value?.results" 
+            v-if="movies?.results.length"
+            v-for="(movie, index) in movies?.results" 
             :key="movie.id" 
             :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
             :title="movie.title"
             :overview="movie.overview"
             :id="movie.id"
+            :on-intersecting="(movieCardEl) => onIntersectMovieCard(index, movieCardEl)"
           />
           <div v-else class="h-[600px] animate-pulse bg-text-primary rounded">
             </div>

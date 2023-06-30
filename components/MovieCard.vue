@@ -1,14 +1,43 @@
 <script setup lang="ts">
-  defineProps<{
+  // const props = defineProps({
+  //   id: Number,
+  //   src: String,
+  //   title: String,
+  //   overview: String,
+  //   onIntersecting: Function,
+  // })
+  const props = defineProps<{
     src: string
     title: string
     overview: string
     id: number
+    onIntersecting?: Function 
   }>()
+  const movieCard = ref(null);
+  
+  onMounted(() => {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if(typeof props.onIntersecting === "function") props.onIntersecting(movieCard.value);
+           // Ejecutar el callback proporcionado a través de props
+          observer.unobserve(entry.target); // Dejar de observar una vez que se haya detectado la intersección
+        }
+      });
+    });
+
+    if(movieCard.value) {
+      observer.observe(movieCard.value);
+    }
+    onBeforeUnmount(() => {
+      observer.disconnect();
+    });
+  });
 </script>
 
 <template>
   <article  
+    ref="movieCard"
     class="relative bg-accent text-text-primary rounded-lg overflow-hidden"
   >
     <img class="w-full" :src="src" />
