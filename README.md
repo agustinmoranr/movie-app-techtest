@@ -25,9 +25,12 @@ Tecnologías implementadas:
 Esta es mi solución al test técnico [Movie App](https://techtest-moviedb.netlify.app/)
 
 Desktop: 
+![localhost_3000_](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/0dacd4a9-c9dc-416f-bd7f-5c0cc188f7cf)
 ![techtest-moviedb netlify app_movieDetail_569094](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/310facd4-48b3-4b29-959f-4570b64d58d9)
 
+
 Mobile:
+![localhost_3000_(iPhone 12 Pro)](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/62de561c-b034-47ae-bd1e-23da77032bc8)
 ![techtest-moviedb netlify app_movieDetail_569094(iPhone 12 Pro)](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/f0409aad-ec74-405b-bdfb-639f5d2a6fc5)
 
 
