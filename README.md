@@ -22,6 +22,11 @@ Tecnologías implementadas:
 - Tailwindcss
 - [The movie database](https://developers.themoviedb.org/)
 
+**Funcionalidades implementadas extra a la prueba técnica**:
+- Funcionalidad de scroll infinito: La paginación se realiza automaticamente al scrollear y hallar la última película mostrada.
+- Uso de local storage persistencia en filtros aplicados: En caso de filtrar las películas, y luego ir a la vista de detalle de alguna. Si el usuario regresa al home,  las película
+mostradas al usuario serán utilizando los últimos filtros que haya utilizado.
+
 Esta es mi solución al test técnico [Movie App](https://techtest-moviedb.netlify.app/)
 
 Desktop: 
