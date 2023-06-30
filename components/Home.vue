@@ -144,7 +144,7 @@
 </script>
 
 <template>
-  <div class="max-w-screen-xl mx-auto p-4">
+  <div class="max-w-screen-xl mx-auto px-4 py-8">
     <header class="mb-8"><h1 class="sm:text-4xl text-2xl font-bold text-center shadow-accent">Películas en cartelera</h1></header>
     <div class="">
       <header class="mb-2">
@@ -207,6 +207,7 @@
       <main>
         <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
           <MovieCard 
+            v-if="movies.value?.results.length"
             v-for="movie in movies.value?.results" 
             :key="movie.id" 
             :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
@@ -214,6 +215,8 @@
             :overview="movie.overview"
             :id="movie.id"
           />
+          <div v-else class="h-[600px] animate-pulse bg-text-primary rounded">
+            </div>
         </section>
       </main>
     </div>

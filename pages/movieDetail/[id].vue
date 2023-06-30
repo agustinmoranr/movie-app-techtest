@@ -49,7 +49,7 @@
 </script>
 
 <template>
-  <div class="max-w-screen-xl mx-auto p-4">
+  <div class="max-w-screen-xl mx-auto px-4 py-8">
     <header class="flex items-center mb-8">
       <button @click="router.back" class="flex items-center bg-primary-button  max-h-8 rounded overflow-hidden">
         <span class="bg-accent h-full"><nuxt-icon name="arrow-back" class="text-2xl"></nuxt-icon></span>
