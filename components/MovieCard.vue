@@ -1,11 +1,4 @@
 <script setup lang="ts">
-  // const props = defineProps({
-  //   id: Number,
-  //   src: String,
-  //   title: String,
-  //   overview: String,
-  //   onIntersecting: Function,
-  // })
   const props = defineProps<{
     src: string
     title: string

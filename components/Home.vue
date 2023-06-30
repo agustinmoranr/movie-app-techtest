@@ -11,6 +11,7 @@
   const openGenresSelector = ref(false)
   const genresLoading = ref(false)
   const with_genres = computed(() => genresToQuery.value.map(genre => genre.id).join("|"))
+  const maxYear = `${new Date().getFullYear() + 1}`
 
   const queryMoviesNowPlaying = (page) => {
     return useFetch(`${config.public.apiBase}/movie/now_playing`, {
@@ -111,7 +112,6 @@
     await queryGenres()
   }
 
-  const maxYear = `${new Date().getFullYear() + 1}`
 
   const onAccepGendersSelector = () => {
     // genresToQuery.value = selectedGenres.value
