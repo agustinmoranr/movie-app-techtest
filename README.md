@@ -1,63 +1,33 @@
-# Nuxt 3 Minimal Starter
+# Prueba Técnica
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Descripción de la prueba técnica: 
 
-## Setup
+Desarrollar una Aplicación (Single Page Application) con Vue 3, Bootstrap/Tailwind, Vuex y Axios. Debe
+consumir al menos 3 endpoints de la API de  [The movie database](https://developers.themoviedb.org/). La app
+estará compuesta de 2 routes ( / y /movieDetail/idMovie), en el route / se debe desplegar una sección con
+una lista de películas (imagen del poster, nombre de película, preview de resumen, año de estreno y género)
+además de una sección de filtrado con al menos 2 rubros (año, director, género, etc) y al cambiar alguno de
+los rubros en los filtros se debe actualizar la lista de películas de manera asíncrona.
 
-Make sure to install the dependencies:
+Al dar clic en el poster de alguna película, debe direccionar al route movieDetail con el id de la película
+correspondiente y desplegar su información, agregar los medios para regresar a la raíz (breadcrumb o liga a
+home).
 
-```bash
-# npm
-npm install
+Seguir patrón de composición de VUE con la idea de reutilizar componentes Web.
+Se tiene la libertad creativa para agregar cualquier funcionalidad y/o interacción de usuario extra, además de
+los elementos gráficos.
 
-# pnpm
-pnpm install
+Tecnologías implementadas:
+- Nuxt.js 3
+- Tailwindcss
+- [The movie database](https://developers.themoviedb.org/)
 
-# yarn
-yarn install
-```
+Esta es mi solución al test técnico [Movie App](https://techtest-moviedb.netlify.app/)
 
-## Development Server
+Desktop: 
+![techtest-moviedb netlify app_movieDetail_569094](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/310facd4-48b3-4b29-959f-4570b64d58d9)
 
-Start the development server on `http://localhost:3000`:
+Mobile:
+![techtest-moviedb netlify app_movieDetail_569094(iPhone 12 Pro)](https://github.com/agustinmoranr/movie-app-techtest/assets/54689488/f0409aad-ec74-405b-bdfb-639f5d2a6fc5)
 
-```bash
-# npm
-npm run dev
 
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
