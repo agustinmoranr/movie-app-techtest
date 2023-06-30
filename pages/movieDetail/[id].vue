@@ -54,14 +54,14 @@
 <template>
   <div class="max-w-screen-xl mx-auto p-4">
     <header class="flex items-center mb-8">
-      <button @click="router.back" class="flex items-center bg-accent max-h-8 rounded overflow-hidden">
-        <span class="bg-primary-button h-full"><nuxt-icon name="arrow-back" class="text-2xl"></nuxt-icon></span>
+      <button @click="router.back" class="flex items-center bg-primary-button  max-h-8 rounded overflow-hidden">
+        <span class="bg-accent h-full"><nuxt-icon name="arrow-back" class="text-2xl"></nuxt-icon></span>
         <span class="font-semibold px-2">Volver</span>
       </button>
       <h1 class="sm:text-4xl text-xl font-bold text-center flex-1">{{movie.title}}</h1>
     </header>
     <main>
-      <div class="flex justify-center flex-col lg:flex-row gap-4 mb-8">
+      <section class="flex justify-center flex-col lg:flex-row gap-4 mb-8">
         <div class=" lg:w-2/3 full-w">
           <img :src="`${movieDBConfig.images.secure_base_url}${movieDBConfig.images.backdrop_sizes[3]}${movie.backdrop_path}`" :alt="movie.title" />
         </div>
@@ -69,8 +69,8 @@
           <div>
             <div class="mb-2">
               <div class="flex items-end gap-2 flex-wrap ">
-                <span class="text-xs italic mb-[0.25rem] sm:order-2">(Titulo original).</span>
-                <h2 class="text-3xl font-bold ">{{movie.original_title}}</h2>
+                <h2 class="sm:text-3xl text-xl font-bold break-words">{{movie.original_title}}</h2>
+                <span class="text-xs italic mb-[0.25rem] ">(Titulo original).</span>
               </div>
               <span class="flex-1 text-sm italic" v-if="movie.tagline"><span class="font-semibold">Lema:</span> "{{ movie.tagline }}"</span>
             </div>
@@ -99,12 +99,12 @@
             </div>
           </div>
         </div>
-      </div>
-      <div>
+      </section>
+      <section>
         <span v-if="trailer?.name" class="block font-bold underline text-xl mb-4">Trailer: <span>{{ trailer.name }}</span></span>
         <iframe v-if="trailer?.url" :src="trailer?.url" class="w-full aspect-video"  frameborder="0" allowfullscreen></iframe>
         <span v-else>Sin trailer disponible.</span>
-      </div>
+      </section>
     </main>
   </div>
     
