@@ -35,19 +35,20 @@
     }),
   ])
   
-  const trailerUrl = ref(null)
+  const trailer = ref(null)
   
   watch([videos], () => {
     if(!videos.value) return null
     console.log("me ejecuto", videos.value)
-    const trailer = videos.value.results.find(video => video.type === "Trailer" && video.site === "YouTube")
+    const filteredTriler = videos.value.results.find(video => video.type === "Trailer" && video.site === "YouTube")
+    console.log(filteredTriler)
     
-    if(trailer) {
-      trailerUrl.value = `https://www.youtube.com/embed/${trailer.key}`
+    if(filteredTriler) {
+      trailer.value = {...filteredTriler, url: `https://www.youtube.com/embed/${filteredTriler.key}`}
     }
   }, {immediate: true})
   
-  console.log(movie, movieDBConfig, videos, trailerUrl)
+  console.log(movie, movieDBConfig, videos, trailer)
 </script>
 
 <template>
@@ -57,15 +58,29 @@
         <span class="bg-primary-button h-full"><nuxt-icon name="arrow-back" class="text-2xl"></nuxt-icon></span>
         <span class="font-semibold px-2">Volver</span>
       </button>
-      <h1 class="sm:text-4xl text-xl font-bold text-center flex-1">Detalles de la película</h1>
+      <h1 class="sm:text-4xl text-xl font-bold text-center flex-1">{{movie.title}}</h1>
     </header>
     <main>
       <div class="flex justify-center flex-col lg:flex-row gap-4 mb-8">
         <div class=" lg:w-2/3 full-w">
           <img :src="`${movieDBConfig.images.secure_base_url}${movieDBConfig.images.backdrop_sizes[3]}${movie.backdrop_path}`" :alt="movie.title" />
         </div>
-        <div class="flex flex-col full-w lg:w-1/3 min-w-[342px] [&>*]:mb-4">
-          <h2 class="text-3xl font-bold ">{{movie.title}}</h2>
+        <div class="flex flex-col full-w lg:w-1/3 min-w-[364px] [&>*]:mb-4">
+          <div>
+            <div class="mb-2">
+              <div class="flex items-end gap-2 flex-wrap ">
+                <span class="text-xs italic mb-[0.25rem] sm:order-2">(Titulo original).</span>
+                <h2 class="text-3xl font-bold ">{{movie.original_title}}</h2>
+              </div>
+              <span class="flex-1 text-sm italic" v-if="movie.tagline"><span class="font-semibold">Lema:</span> "{{ movie.tagline }}"</span>
+            </div>
+            <div class="flex flex-col flex-wrap gap-1">
+              <span v-if="movie.release_date"><span class="font-semibold">fecha de lanzamiento:</span> {{movie.release_date}}</span>
+              <span v-if="movie.budget"><span class="font-semibold">Presupuesto:</span> ${{movie.budget}} (USD)</span>
+              <span v-if="movie.revenue"><span class="font-semibold">Recaudación:</span> ${{movie.revenue}} (USD)</span>
+              <span v-if="movie.vote_average"><span class="font-semibold">Puntuacion:</span> {{ Math.floor(movie.vote_average) }}/10 en TMDB</span>
+            </div>
+          </div>
           <div class="">
             <span class="font-bold underline">Sinopsis</span>
             <p v-if="movie.overview">{{movie.overview}}</p>
@@ -86,8 +101,8 @@
         </div>
       </div>
       <div>
-        <span class="block font-bold underline text-xl mb-4">Trailer</span>
-        <iframe v-if="trailerUrl" :src="trailerUrl" class="w-full aspect-video"  frameborder="0" allowfullscreen></iframe>
+        <span class="block font-bold underline text-xl mb-4">Trailer: <span>{{ trailer.name }}</span></span>
+        <iframe v-if="trailer?.url" :src="trailer?.url" class="w-full aspect-video"  frameborder="0" allowfullscreen></iframe>
         <span v-else>Sin trailer disponible.</span>
       </div>
     </main>
