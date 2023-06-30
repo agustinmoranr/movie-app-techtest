@@ -19,7 +19,7 @@
         <span v-else class="text-sm line-clamp-4">Sin sinopsis en español.</span>
       </div>
       <NuxtLink class="ml-auto " :to="`movieDetail/${id}`">
-        <button class="bg-primary-button p-2 w-full">Mostrar detalle</button>
+        <button class="bg-primary-button p-2 w-full">MOSTRAR DETALLE</button>
       </NuxtLink>
     </div>
   </article>
