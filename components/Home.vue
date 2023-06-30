@@ -12,6 +12,7 @@
   const genresToQuery = ref([])
   const openGenresSelector = ref(false)
   const genresLoading = ref(false)
+  const with_genres = computed(() => genresToQuery.value.map(genre => genre.id).join("|"))
   const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
     useFetch(`${config.public.apiBase}/configuration`, {
       headers: {
@@ -34,17 +35,18 @@
     })
   ])
 
-  const {data: moviesByYear, pending, error} = await useFetch(`${config.public.apiBase}/discover/movie`, {
+  const {data: moviesFiltered, pending, error} = await useFetch(`${config.public.apiBase}/discover/movie`, {
     query: {
       include_adult: false,
       include_video: false,
       language: 'es-MX',
       page: moviesByYearPage,
       primary_release_year: release_year,
+      with_genres,
       sort_by: 'popularity.desc',
     },
     onRequest({ request, options}) {
-      if(!release_year.value) {
+      if(!release_year.value && !with_genres.value.length) {
         return request.signal.abort()
       }
     },
@@ -52,7 +54,7 @@
       accept: 'application/json',
       Authorization: `Bearer ${config.public.accessToken}`
     },
-    watch: [release_year, moviesByYearPage],
+    watch: [release_year, moviesByYearPage, with_genres],
     server: false
   })
 
@@ -80,16 +82,22 @@
     await queryGenres()
   }
 
-  watch([mode, release_year, moviesByYear], () => {
-    if(mode.value === "release_year" && moviesByYear.value) {
-      return movies.value = moviesByYear
+  watch([mode, release_year, moviesFiltered, genresToQuery], () => {
+    if(mode.value === "filtering" && moviesFiltered.value) {
+      return movies.value = moviesFiltered
     }
 
     movies.value = moviesNowPlaying ?? {results: []}
   }, {immediate: true})
   
+  watch([release_year, genresToQuery], () => {
+    if(release_year.value || genresToQuery.value.length > 0) {
+      mode.value = "filtering"
+    }
+  })
+
   function handleSelectYear() {
-    mode.value = "release_year"
+    mode.value = "filtering"
   }
   const maxYear = `${new Date().getFullYear() + 1}`
 
@@ -125,7 +133,6 @@
     return selectedGenresIds.includes(genre.id)
   }
 
-  console.log({movieDBConfig, movies, genres, selectedGenres })
 </script>
 
 <template>
