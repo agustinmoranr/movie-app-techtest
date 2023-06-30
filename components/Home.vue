@@ -8,13 +8,12 @@
   const moviesNowPlayingPage = ref(1)
   const movies = ref({results: []})
   const [{data: movieDBConfig}, {data: moviesNowPlaying}] = await Promise.all([
-    useFetch(`/configuration`, {
+    useFetch(`${config.public.apiBase}/configuration`, {
       headers: {
         accept: 'application/json',
         Authorization: `Bearer ${config.public.accessToken}`
       },
       server: false,
-      baseURL: config.public.apiBase,
     }),
     useFetch(`${config.public.apiBase}/movie/now_playing`, {
       query: {
