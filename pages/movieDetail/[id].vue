@@ -39,16 +39,13 @@
   
   watch([videos], () => {
     if(!videos.value) return null
-    console.log("me ejecuto", videos.value)
     const filteredTriler = videos.value.results.find(video => video.type === "Trailer" && video.site === "YouTube")
-    console.log(filteredTriler)
     
     if(filteredTriler) {
       trailer.value = {...filteredTriler, url: `https://www.youtube.com/embed/${filteredTriler.key}`}
     }
   }, {immediate: true})
   
-  console.log(movie, movieDBConfig, videos, trailer)
 </script>
 
 <template>

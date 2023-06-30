@@ -67,10 +67,10 @@
 
 <template>
   <div class="max-w-screen-xl mx-auto p-4">
-    <header class="mb-8"><h1 class="sm:text-4xl text-xl font-bold text-center">Películas en cartelera</h1></header>
+    <header class="mb-8"><h1 class="sm:text-4xl text-2xl font-bold text-center shadow-accent">Películas en cartelera</h1></header>
     <div class="">
       <header class="mb-2">
-        <h2 class="sm:text-2xl text-xl">Cartelera</h2>
+        <h2 class="sm:text-2xl text-lg">Cartelera</h2>
       </header>
       <div class="mb-4">
         <span>Filtrar por:</span>
@@ -102,7 +102,6 @@
             :overview="movie.overview"
             :id="movie.id"
           />
-          
         </section>
       </main>
     </div>
