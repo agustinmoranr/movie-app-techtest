@@ -1,15 +1,18 @@
 <script setup>
   import VueDatePicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
+  const { value: mode, setValue: setModeValue } = useLocalStorage('mode', 'list');
+  const { value: release_year, setValue: setReleaseYearValue, removeValue: removeYear } = useLocalStorage('release_year');
+  const { value: genresToQuery, setValue: setGenresToQueryValue, removeValue: removeGenres } = useLocalStorage('genresToQuery', []);
   const config = useRuntimeConfig();
-  const release_year = ref();
-  const mode = ref("list")
+  // const release_year = ref();
+  // const mode = ref("list")
+  // const genresToQuery = ref([])
   const moviesByYearPage = ref(1)
   const moviesNowPlayingPage = ref(1)
   const movies = ref({results: []})
   const genres = ref(null)
   const selectedGenres = ref([])
-  const genresToQuery = ref([])
   const openGenresSelector = ref(false)
   const genresLoading = ref(false)
   const with_genres = computed(() => genresToQuery.value.map(genre => genre.id).join("|"))
@@ -58,6 +61,10 @@
     server: false
   })
 
+  const handleSelectYear = (value) => {
+    setReleaseYearValue(value)
+  }
+
   const queryGenres = async () => {
     genresLoading.value = true
     if(genres.value) return 
@@ -86,7 +93,9 @@
   
   watch([release_year, genresToQuery], () => {
     if(release_year.value || genresToQuery.value.length > 0) {
-      mode.value = "filtering"
+      setModeValue("filtering")
+    } else {
+      setModeValue("list")
     }
   })
 
@@ -96,13 +105,14 @@
     await queryGenres()
   }
 
-  function handleSelectYear() {
-    mode.value = "filtering"
-  }
+  // function handleSelectYear() {
+  //   mode.value = "filtering"
+  // }
   const maxYear = `${new Date().getFullYear() + 1}`
 
   const onAccepGendersSelector = () => {
-    genresToQuery.value = selectedGenres.value
+    // genresToQuery.value = selectedGenres.value
+    setGenresToQueryValue(selectedGenres.value)
     closeGenresSelector()
   }
 
@@ -112,7 +122,8 @@
   }
 
   const onCleanGenresFilter = () => {
-    genresToQuery.value = []
+    // genresToQuery.value = []
+    removeGenres()
   }
 
   const onSelectGenre = (genre) => {
@@ -165,6 +176,7 @@
               <VueDatePicker
               v-model="release_year"  
               @update:model-value="handleSelectYear"
+              @cleared="removeYear"
               :max-date="maxYear"
               :action-row="{showCancel: false}" 
               :hide-input-icon="true"
