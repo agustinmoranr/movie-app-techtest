@@ -101,7 +101,7 @@
         </div>
       </div>
       <div>
-        <span class="block font-bold underline text-xl mb-4">Trailer: <span>{{ trailer.name }}</span></span>
+        <span v-if="trailer?.name" class="block font-bold underline text-xl mb-4">Trailer: <span>{{ trailer.name }}</span></span>
         <iframe v-if="trailer?.url" :src="trailer?.url" class="w-full aspect-video"  frameborder="0" allowfullscreen></iframe>
         <span v-else>Sin trailer disponible.</span>
       </div>
