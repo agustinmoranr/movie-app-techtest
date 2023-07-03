@@ -7,6 +7,7 @@
     onIntersecting?: Function 
   }>()
   const movieCard = ref(null);
+  import LazyImage from '@/components/LazyImage.vue';
   
   onMounted(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -33,7 +34,7 @@
     ref="movieCard"
     class="relative bg-accent text-text-primary rounded-lg overflow-hidden"
   >
-    <img class="w-full" :src="src" />
+    <LazyImage class="w-full" :src="src" />
     <div class="p-4">
       <div class="mb-4">
         <h3 class="text-xl font-bold mb-2">{{title}}</h3>

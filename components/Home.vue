@@ -177,12 +177,12 @@
         <h2 class="sm:text-2xl text-lg">Cartelera</h2>
       </header>
       <div class="mb-4">
-        <span>Filtrar por:</span>
+        <span class="font-semibold">Filtrar por:</span>
         <div class="flex mt-2 gap-4">
-          <div class="flex flex-col gap-1"> 
-            <span class="text-sm">Categorías</span>
-            <button @click="handleOpenGenresSelector" class="bg-primary-button py-1 px-2 rounded h-full text-sm">
-              GENEROS
+          <div class="flex flex-col gap-1 min-w-[50%] sm:min-w-[auto]"> 
+            <span class="text-sm">Categorías de géneros</span>
+            <button @click="handleOpenGenresSelector" class="bg-primary-button py-1 px-2 rounded h-full text-sm uppercase">
+              Géneros
             </button>
           </div>
           <div class="flex flex-col gap-1 [&>.w-24]:w-full">
