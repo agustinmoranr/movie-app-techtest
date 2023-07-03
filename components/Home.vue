@@ -170,7 +170,7 @@
 </script>
 
 <template>
-  <div class="max-w-screen-xl mx-auto px-4 py-8">
+  <div class="max-w-screen-xl mx-auto sm:px-4 px-2 py-8">
     <header class="mb-8"><h1 class="sm:text-4xl text-2xl font-bold text-center shadow-accent">Películas en cartelera</h1></header>
     <div class="">
       <header class="mb-2">
@@ -232,7 +232,7 @@
         </div>
       </div>
       <main>
-        <section class="grid  md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
+        <section class="grid grid-cols-3 sm:gap-4 gap-2">
           <MovieCard 
             v-if="movies?.results.length"
             v-for="(movie, index) in movies?.results" 
