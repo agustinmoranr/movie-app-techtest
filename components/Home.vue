@@ -158,7 +158,6 @@
   const onIntersectMovieCard = async (index, element) => {
     // if it is the last item in list query more results
     if((index === movies.value?.results?.length - 1) && currentPage.value <= movies.value.total_pages) {
-      console.log("i am last item")
       currentPage.value++
       const newMovies = await handleQueryMovies(currentPage.value)
 
@@ -182,7 +181,7 @@
         <div class="flex mt-2 gap-4">
           <div class="flex flex-col gap-1"> 
             <span class="text-sm">Categorías</span>
-            <button @click="handleOpenGenresSelector" class="bg-primary-button py-1 px-2 rounded h-full">
+            <button @click="handleOpenGenresSelector" class="bg-primary-button py-1 px-2 rounded h-full text-sm">
               GENEROS
             </button>
           </div>
