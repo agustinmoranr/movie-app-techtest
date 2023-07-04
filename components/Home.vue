@@ -238,6 +238,7 @@
             v-for="(movie, index) in movies?.results" 
             :key="movie.id" 
             :src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[4]}${movie.poster_path}`"
+            :mobile-src="`${config.public.apiBaseImages}/${movieDBConfig.images.poster_sizes[1]}${movie.poster_path}`"
             :title="movie.title"
             :overview="movie.overview"
             :id="movie.id"

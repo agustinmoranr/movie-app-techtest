@@ -60,7 +60,7 @@
     <main>
       <section class="flex justify-center flex-col lg:flex-row gap-4 mb-8">
         <div class=" lg:w-2/3 full-w">
-          <img :src="`${movieDBConfig.images.secure_base_url}${movieDBConfig.images.backdrop_sizes[3]}${movie.backdrop_path}`" :alt="movie.title" />
+          <img :src="`${movieDBConfig.images.secure_base_url}${movieDBConfig.images.backdrop_sizes[3]}${movie.backdrop_path}`" :alt="movie.title" :title="movie.title" />
         </div>
         <div class="flex flex-col full-w lg:w-1/3 min-w-[364px] [&>*]:mb-4">
           <div>
